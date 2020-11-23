@@ -40,11 +40,17 @@ for index,path in enumerate(audio_df.file_path):
     X, sample_rate = librosa.load(path, res_type='kaiser_fast',duration=3,sr=44100,offset=0.5)
     spectrogram = librosa.feature.melspectrogram(y=X, sr=sample_rate, n_mels=128,fmax=8000) 
     db_spec = librosa.power_to_db(spectrogram)
-    print(db_spec)
     log_spectrogram = np.mean(db_spec, axis = 0)
     df.loc[counter] = [log_spectrogram]
+    #print(df.head())
     counter=counter+1
-print(df.head(30))
-
-audio_df = pd.concat([audio_df,df],axis=0)
-print(audio_df.head(30))
+df = df.mel_spectrogram.apply(pd.Series)
+audio_df = pd.concat([audio_df,df],axis=1)
+audio_df.drop(columns='file_path',inplace=True)
+print(audio_df.head(10))
+print(audio_df.shape)
+audio_df.dropna(inplace=True)
+print()
+print("DROPPED")
+print(audio_df.head(10))
+print(audio_df.shape)
