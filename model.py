@@ -1,4 +1,4 @@
-from convolution import conv2d
+from __future__ import absolute_import
 
 import os
 import tensorflow as tf
@@ -22,7 +22,7 @@ class Model(tf.keras.Model):
         self.max1 = tf.keras.layers.MaxPool2D(pool_size = (3,3), strides = (2,2))
         self.max2 = tf.keras.layers.MaxPool2D(pool_size=(3, 3), strides=(2,2)) 
         self.max3 = tf.keras.layers.MaxPool2D(pool_size=(3, 3), strides=(2,2)) 
-        self.u = tf.Variable(tf.random.truncated_normal((f,t)))
+        self.u = tf.Variable(tf.random.truncated_normal((dims))
         # 
 
     def FCN(self, speech_spectrogram)
@@ -40,11 +40,13 @@ class Model(tf.keras.Model):
     layer4out = self.layer4(layer3out)
     layer5out = self.layer5(layer4out)
     FCN_out = self.max3(layer5out)
+    
 
     return FCN_out
 
-    def attention_layer(self, FCN_out):  # include softmax activation to determine classifications
-        for i in range (3dim of FCN_out): 
+    # def attention_layer(self, FCN_out):  # include softmax activation to determine classifications
+    # self.dims = ()
+    #     for i in range (3dim of FCN_out): 
             
 
         pass

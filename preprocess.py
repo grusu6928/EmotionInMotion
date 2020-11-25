@@ -58,3 +58,6 @@ print(audio_df.head(10))
 print(audio_df.shape)
 
 audio_df.to_csv("data/full_data.csv")
+# 102, 261
+# 408, 261
+# training data is 259 cols
