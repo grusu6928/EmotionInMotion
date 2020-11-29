@@ -10,7 +10,7 @@ from scipy.io import wavfile
 import os # interface with underlying OS that python is running on
 import sys
 
-df = pd.read_csv("data/full_data.csv")
+df = pd.read_csv("../data/full_data.csv")
 df = df.sample(frac=1)
 df.reset_index(inplace=True)
 df.drop(columns=['Unnamed: 0','index'],inplace=True)
@@ -26,7 +26,7 @@ print("Test1")
 print(test1.head(10))
 print(test1.tail(10))
 print(test1.shape)
-test1.to_csv("data/test_sample1.csv")
+test1.to_csv("../data/test_sample1.csv")
 
 train1 = df.iloc[102:,:]
 train1.reset_index(inplace=True)
@@ -36,7 +36,7 @@ print("Train1")
 print(train1.head(10))
 print(train1.tail(10))
 print(train1.shape)
-train1.to_csv("data/train_sample1.csv")
+train1.to_csv("../data/train_sample1.csv")
 
 ### SAMPLE 2 ###
 test2 = df.iloc[102:204,:]
@@ -47,7 +47,7 @@ print("Test2")
 print(test2.head(10))
 print(test2.tail(10))
 print(test2.shape)
-test2.to_csv("data/test_sample2.csv")
+test2.to_csv("../data/test_sample2.csv")
 
 train2_first = df.iloc[:102,:]
 train2_second = df.iloc[204:,:]
@@ -59,7 +59,7 @@ print("Train2")
 print(train2.head(10))
 print(train2.tail(10))
 print(train2.shape)
-train2.to_csv("data/train_sample2.csv")
+train2.to_csv("../data/train_sample2.csv")
 
 ### SAMPLE 3 ###
 test3 = df.iloc[204:306,:]
@@ -70,7 +70,7 @@ print("Test3")
 print(test3.head(10))
 print(test3.tail(10))
 print(test3.shape)
-test3.to_csv("data/test_sample3.csv")
+test3.to_csv("../data/test_sample3.csv")
 
 train3_first = df.iloc[:204,:]
 train3_second = df.iloc[306:,:]
@@ -82,7 +82,7 @@ print("Train3")
 print(train3.head(10))
 print(train3.tail(10))
 print(train3.shape)
-train3.to_csv("data/train_sample3.csv")
+train3.to_csv("../data/train_sample3.csv")
 
 ### SAMPLE 4 ###
 test4 = df.iloc[306:408,:]
@@ -93,7 +93,7 @@ print("Test4")
 print(test4.head(10))
 print(test4.tail(10))
 print(test4.shape)
-test4.to_csv("data/test_sample4.csv")
+test4.to_csv("../data/test_sample4.csv")
 
 train4_first = df.iloc[:306,:]
 train4_second = df.iloc[408:,:]
@@ -105,7 +105,7 @@ print("Train4")
 print(train4.head(10))
 print(train4.tail(10))
 print(train4.shape)
-train4.to_csv("data/train_sample4.csv")
+train4.to_csv("../data/train_sample4.csv")
 
 ### SAMPLE 5 ###
 test5 = df.iloc[408:,:]
@@ -116,7 +116,7 @@ print("Test5")
 print(test5.head(10))
 print(test5.tail(10))
 print(test5.shape)
-test5.to_csv("data/test_sample5.csv")
+test5.to_csv("../data/test_sample5.csv")
 
 train5 = df.iloc[:408,:]
 train5.reset_index(inplace=True)
@@ -126,4 +126,4 @@ print("Train5")
 print(train5.head(10))
 print(train5.tail(10))
 print(train5.shape)
-train5.to_csv("data/train_sample5.csv")
+train5.to_csv("../data/train_sample5.csv")

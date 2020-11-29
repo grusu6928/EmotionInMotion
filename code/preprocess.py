@@ -38,7 +38,7 @@ df = pd.DataFrame(columns=['mel_spectrogram'])
 counter=0
 for index,path in enumerate(audio_df.file_path):
     X, sample_rate = librosa.load(path, res_type='kaiser_fast',duration=3,sr=44100,offset=0.5)
-    spectrogram = librosa.feature.melspectrogram(y=X, sr=sample_rate, n_mels=128,fmax=8000) 
+    spectrogram = librosa.feature.melspectrogram(y=X, sr=sample_rate, n_mels=128,fmax=8000)
     db_spec = librosa.power_to_db(spectrogram)
     log_spectrogram = np.mean(db_spec, axis = 0)
     df.loc[counter] = [log_spectrogram]
@@ -57,7 +57,7 @@ print("DROPPED")
 print(audio_df.head(10))
 print(audio_df.shape)
 
-audio_df.to_csv("data/full_data.csv")
+audio_df.to_csv("../data/full_data.csv")
 # 102, 261
 # 408, 261
 # training data is 259 cols
