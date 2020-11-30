@@ -11,4 +11,8 @@ pip install -U pip
 # this installs the required python packages to the virtual environment
 pip install -r requirements.txt
 
+pip install librosa
+pip install pandas
+pip install keras
+
 echo created environment
