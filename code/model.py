@@ -15,16 +15,16 @@ class Model(tf.keras.Model):
     def __init__(self):
         super(Model, self).__init__()
         tf.keras.backend.set_floatx('float64')
-        self.learning_rate = 0.5
+        self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(self.learning_rate)
         self.batch_size = 60
-        self.num_epochs = 200
+        self.num_epochs = 2000
         # num channels,kernel size, stride size
         self.layer1 = tf.keras.layers.Conv1D(20, 11, strides = 4, activation = "relu", input_shape = (259,1))
         self.layer2 = tf.keras.layers.Conv1D(40, 5, strides = 1, activation = "relu")
         self.layer3 = tf.keras.layers.Conv1D(80, 3, strides = 1, activation = "relu")
         self.layer4 = tf.keras.layers.Conv1D(160, 3, strides = 1, activation = "relu")
-        self.layer5 = tf.keras.layers.Conv1D(256, 3, strides = 1, activation = "relu") #!!!!!!!!!!
+        #self.layer5 = tf.keras.layers.Conv1D(256, 3, strides = 1, activation = "relu") #!!!!!!!!!!
         #“Maxpool-[kernelsize]-[stride size]”
         self.max1 = tf.keras.layers.MaxPool1D(pool_size = 3, strides = 2)
         self.max2 = tf.keras.layers.MaxPool1D(pool_size = 3, strides = 2)
@@ -63,10 +63,10 @@ class Model(tf.keras.Model):
         layer4out = self.layer4(layer3out)
         #print("layer four output shape:")
         #print(layer4out.shape)
-        layer5out = self.layer5(layer4out)
+        #layer5out = self.layer5(layer4out)
         #print("layer five output shape:")
         #print(layer5out.shape)
-        FCN_out = self.max3(layer5out)
+        FCN_out = self.max3(layer4out)
         flattened_fcn_output = tf.keras.layers.Flatten()(FCN_out)
 
         #print("flattened fcn shape")
