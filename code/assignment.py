@@ -63,10 +63,10 @@ def reshape_spectrogram(spec_train, spec_test):
     return spec_train,spec_test
 
 def train(model, spec_train, label_train):
-    #indices = range(spec_train.shape[0])
-    #indices = tf.random.shuffle(indices)
-    #spec_train = tf.gather(spec_train, indices)
-    #label_train = tf.gather(label_train, indices)
+    indices = range(spec_train.shape[0])
+    indices = tf.random.shuffle(indices)
+    spec_train = tf.gather(spec_train, indices)
+    label_train = tf.gather(label_train, indices)
     loss_list = []
     for i in range(0,len(spec_train),model.batch_size):
         if model.batch_size + i <= len(spec_train):
@@ -113,6 +113,7 @@ def main():
     print("Reshaped spectogram")
     print("Finished preprocessing!")
     sample_accuracy = []
+    #run each sample
     for sample in range(5):
         model = Model()
         print("Starting training...")
@@ -131,6 +132,8 @@ def main():
         sample_accuracy.append(acc)
         print("Final accuracy for sample " + str(sample + 1) + " : " + acc)
     print()
+
+    print("Final accuracies:")
     for sample in range(5):
         print("Sample " + str(sample + 1) + " accuracy: " + sample_accuracy[sample])
 
