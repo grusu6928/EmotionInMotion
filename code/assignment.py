@@ -14,8 +14,6 @@ import sys
 
 from model import Model
 
-sample = 1
-
 def visualize_loss(losses):
     """
     Uses Matplotlib to visualize the losses of our model.
@@ -34,14 +32,19 @@ def visualize_loss(losses):
     plt.show()
 
 def load_data():
-    train = pd.read_csv("../data/train_sample"+str(sample)+".csv")
-    test = pd.read_csv("../data/test_sample"+str(sample)+".csv")
-    spec_test = test.iloc[:, 3:]
-    label_test = test.iloc[:,1]
+    spec_train = []
+    spec_test = []
+    label_train = []
+    label_test = []
+    for sample in range(1,6):
+        train = pd.read_csv("../data/train_sample"+str(sample)+".csv")
+        test = pd.read_csv("../data/test_sample"+str(sample)+".csv")
+        spec_test.append(test.iloc[:, 3:])
+        label_test.append(test.iloc[:,1])
 
-    spec_train = train.iloc[:, 3:]
+        spec_train.append(train.iloc[:, 3:])
     #print(spec_train.head(10))
-    label_train = train.iloc[:,1]
+        label_train.append(train.iloc[:,1])
     #print(label_train.head(10))
     return spec_train, spec_test, label_train, label_test
 
@@ -102,28 +105,34 @@ def main():
     print("Starting preprocessing...")
     spec_train, spec_test, label_train, label_test = load_data()
     print("Data loaded!")
-    label_train, label_test = one_hot(label_train, label_test)
-    print("One hot created!")
-    spec_train, spec_test = reshape_spectrogram(spec_train, spec_test)
+    for sample in range(5):
+        label_train[sample], label_test[sample] = one_hot(label_train[sample], label_test[sample])
+    print("One hots created!")
+    for sample in range(5):
+        spec_train[sample], spec_test[sample] = reshape_spectrogram(spec_train[sample], spec_test[sample])
     print("Reshaped spectogram")
     print("Finished preprocessing!")
-    f = spec_train.shape[0] #frequency
-    t = spec_train.shape[1] #time
-    model = Model()
-    print("Starting training...")
-    loss_list = []
-    for _i_ in range(model.num_epochs):
-        print()
-        print("Epoch " + str(_i_ + 1) + ":")
-        print()
-        loss_list = loss_list + train(model, spec_train, label_train)
-    if(visualize == True):
-        print()
-        visualize_loss(loss_list)
-        print()
-    print("Finished training!")
-    print("Final accuracy: " + str(test(model, spec_test, label_test)))
-
+    sample_accuracy = []
+    for sample in range(5):
+        model = Model()
+        print("Starting training...")
+        loss_list = []
+        for _i_ in range(model.num_epochs):
+            print()
+            print("Epoch " + str(_i_ + 1) + ":")
+            print()
+            loss_list = loss_list + train(model, spec_train[sample], label_train[sample])
+        if(visualize == True):
+            print()
+            visualize_loss(loss_list)
+            print()
+        print("Finished traning!")
+        acc = str(test(model, spec_test[sample], label_test[sample]))
+        sample_accuracy.append(acc)
+        print("Final accuracy for sample " + str(sample + 1) + " : " + acc)
+    print()
+    for sample in range(5):
+        print("Sample " + str(sample + 1) + " accuracy: " + sample_accuracy[sample])
 
 if __name__ == '__main__':
     main()
