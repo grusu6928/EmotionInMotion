@@ -62,7 +62,7 @@ def reshape_spectrogram(spec_train, spec_test):
     spec_test = tf.expand_dims(spec_test, axis=2)
     return spec_train,spec_test
 
-def train(model, spec_train, label_train, shuffle=False):
+def train(model, spec_train, label_train, shuffle=False, noprint=False):
     if(shuffle):
         indices = range(spec_train.shape[0])
         indices = tf.random.shuffle(indices)
@@ -82,7 +82,8 @@ def train(model, spec_train, label_train, shuffle=False):
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             train_acc = model.accuracy(predictions, label)
-            print("Accuracy on training set after {} training steps: {}".format(i, train_acc))
+            if not noprint:
+                print("Accuracy on training set after {} training steps: {}".format(i, train_acc))
     return loss_list
 
 def test(model, spec_test, label_test):
@@ -102,6 +103,10 @@ def main():
     else:
         visualize = False
         print("To visualize loss, call 'VISUALIZE' argument.")
+    if "NOPRINT" in sys.argv:
+        noprint = True
+    else:
+        noprint = False
     if "SHUFFLE" in sys.argv:
         shuffle = True
     else:
@@ -122,14 +127,16 @@ def main():
     sample_accuracy = []
     #run each sample
     for sample in range(5):
+        print("sample #", sample)
         model = Model()
         print("Starting training...")
         loss_list = []
         for _i_ in range(model.num_epochs):
-            print()
-            print("Epoch " + str(_i_ + 1) + ":")
-            print()
-            loss_list = loss_list + train(model, spec_train[sample], label_train[sample], shuffle=shuffle)
+            if not noprint:
+                print()
+                print("Epoch " + str(_i_ + 1) + ":")
+                print()
+            loss_list = loss_list + train(model, spec_train[sample], label_train[sample], shuffle=shuffle, noprint=noprint)
         if(visualize == True):
             print()
             visualize_loss(loss_list)
@@ -142,6 +149,7 @@ def main():
 
     print("Final accuracies:")
     for sample in range(5):
+    
         print("Sample " + str(sample + 1) + " accuracy: " + sample_accuracy[sample])
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ class Model(tf.keras.Model):
         self.learning_rate = 0.5
         self.optimizer = tf.keras.optimizers.Adam(self.learning_rate)
         self.batch_size = 60
-        self.num_epochs = 5
+        self.num_epochs = 200
         # num channels,kernel size, stride size
         self.layer1 = tf.keras.layers.Conv1D(20, 11, strides = 4, activation = "relu", input_shape = (259,1))
         self.layer2 = tf.keras.layers.Conv1D(40, 5, strides = 1, activation = "relu")
@@ -34,7 +34,7 @@ class Model(tf.keras.Model):
         self.u = tf.Variable(tf.random.truncated_normal((self.batch_size, 4, 1)))
         self.linear_layer = tf.keras.layers.Dense((4), activation="tanh", dtype='float32') #might be different f and t
         #self.test_layer = tf.keras.layers.Dense((4), activation="tanh", dtype='float32')
-        self.lammda = 0.3
+        self.lammda = .8
 
     def FCN_layer(self, speech_spectrogram):
         #output of FCN encoder is a 3-dimensional
