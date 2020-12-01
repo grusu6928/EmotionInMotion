@@ -10,10 +10,28 @@ import random as rd
 import math
 from sklearn.preprocessing import LabelEncoder
 from keras.utils import to_categorical
+import sys
 
 from model import Model
 
-sample = 5
+sample = 1
+
+def visualize_loss(losses):
+    """
+    Uses Matplotlib to visualize the losses of our model.
+    :param losses: list of loss data stored from train. Can use the model's loss_list
+    field
+
+    NOTE: DO NOT EDIT
+
+    :return: doesn't return anything, a plot should pop-up
+    """
+    x = [i for i in range(len(losses))]
+    plt.plot(x, losses)
+    plt.title('Loss per batch')
+    plt.xlabel('Batch')
+    plt.ylabel('Loss')
+    plt.show()
 
 def load_data():
     train = pd.read_csv("../data/train_sample"+str(sample)+".csv")
@@ -46,6 +64,7 @@ def train(model, spec_train, label_train):
     #indices = tf.random.shuffle(indices)
     #spec_train = tf.gather(spec_train, indices)
     #label_train = tf.gather(label_train, indices)
+    loss_list = []
     for i in range(0,len(spec_train),model.batch_size):
         if model.batch_size + i <= len(spec_train):
             spec=spec_train[i:i+model.batch_size]
@@ -55,10 +74,12 @@ def train(model, spec_train, label_train):
                 predictions = model.call(spec)
                 loss = model.loss(predictions, label)
                 #print(loss)
+                loss_list.append(loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             train_acc = model.accuracy(predictions, label)
             print("Accuracy on training set after {} training steps: {}".format(i, train_acc))
+    return loss_list
 
 def test(model, spec_test, label_test):
     test_accuracy = []
@@ -72,6 +93,12 @@ def test(model, spec_test, label_test):
     return(np.mean(test_accuracy))
 
 def main():
+    if len(sys.argv) == 2 and sys.argv[1] == "VISUALIZE":
+        visualize = True
+    else:
+        visualize = False
+        print("To visualize loss, call 'python assignment.py VISUALIZE'")
+        print()
     print("Starting preprocessing...")
     spec_train, spec_test, label_train, label_test = load_data()
     print("Data loaded!")
@@ -84,11 +111,16 @@ def main():
     t = spec_train.shape[1] #time
     model = Model()
     print("Starting training...")
+    loss_list = []
     for _i_ in range(model.num_epochs):
         print()
         print("Epoch " + str(_i_ + 1) + ":")
         print()
-        train(model, spec_train, label_train)
+        loss_list = loss_list + train(model, spec_train, label_train)
+    if(visualize == True):
+        print()
+        visualize_loss(loss_list)
+        print()
     print("Finished training!")
     print("Final accuracy: " + str(test(model, spec_test, label_test)))
 
