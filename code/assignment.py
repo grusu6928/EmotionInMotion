@@ -62,11 +62,12 @@ def reshape_spectrogram(spec_train, spec_test):
     spec_test = tf.expand_dims(spec_test, axis=2)
     return spec_train,spec_test
 
-def train(model, spec_train, label_train):
-    indices = range(spec_train.shape[0])
-    indices = tf.random.shuffle(indices)
-    spec_train = tf.gather(spec_train, indices)
-    label_train = tf.gather(label_train, indices)
+def train(model, spec_train, label_train, shuffle=False):
+    if(shuffle):
+        indices = range(spec_train.shape[0])
+        indices = tf.random.shuffle(indices)
+        spec_train = tf.gather(spec_train, indices)
+        label_train = tf.gather(label_train, indices)
     loss_list = []
     for i in range(0,len(spec_train),model.batch_size):
         if model.batch_size + i <= len(spec_train):
@@ -96,12 +97,18 @@ def test(model, spec_test, label_test):
     return(np.mean(test_accuracy))
 
 def main():
-    if len(sys.argv) == 2 and sys.argv[1] == "VISUALIZE":
+    if "VISUALIZE" in sys.argv:
         visualize = True
     else:
         visualize = False
-        print("To visualize loss, call 'python assignment.py VISUALIZE'")
-        print()
+        print("To visualize loss, call 'VISUALIZE' argument.")
+    if "SHUFFLE" in sys.argv:
+        shuffle = True
+    else:
+        shuffle = False
+        print("To shuffle in train, call 'SHUFFLE' argument.")
+    print()
+
     print("Starting preprocessing...")
     spec_train, spec_test, label_train, label_test = load_data()
     print("Data loaded!")
@@ -122,7 +129,7 @@ def main():
             print()
             print("Epoch " + str(_i_ + 1) + ":")
             print()
-            loss_list = loss_list + train(model, spec_train[sample], label_train[sample])
+            loss_list = loss_list + train(model, spec_train[sample], label_train[sample], shuffle=shuffle)
         if(visualize == True):
             print()
             visualize_loss(loss_list)
