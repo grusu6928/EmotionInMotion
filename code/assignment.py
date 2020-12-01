@@ -73,7 +73,7 @@ def train(model, spec_train, label_train, shuffle=False, noprint=False):
         if model.batch_size + i <= len(spec_train):
             spec=spec_train[i:i+model.batch_size]
             label = label_train[i:i+model.batch_size]
-            # Implement backprop: 
+            # Implement backprop
             with tf.GradientTape() as tape:
                 predictions = model.call(spec)
                 loss = model.loss(predictions, label)
@@ -92,7 +92,6 @@ def test(model, spec_test, label_test):
         if model.batch_size + i <= len(spec_test):
             spec = spec_test[i:i+model.batch_size]
             label = label_test[i:i+model.batch_size]
-            # Implement backprop: 
             predictions = model.call(spec) # this calls the call function conveniently 
             test_accuracy.append(model.accuracy(predictions, label))
     return(np.mean(test_accuracy))
@@ -107,6 +106,7 @@ def main():
         noprint = True
     else:
         noprint = False
+        print("To run without printing, call 'NOPRINT' argument.")
     if "SHUFFLE" in sys.argv:
         shuffle = True
     else:
@@ -127,7 +127,7 @@ def main():
     sample_accuracy = []
     #run each sample
     for sample in range(5):
-        print("sample #", sample)
+        print("Sample #", sample)
         model = Model()
         print("Starting training...")
         loss_list = []
@@ -142,15 +142,15 @@ def main():
             visualize_loss(loss_list)
             print()
         print("Finished traning!")
-        acc = str(test(model, spec_test[sample], label_test[sample]))
+        acc = test(model, spec_test[sample], label_test[sample])
         sample_accuracy.append(acc)
-        print("Final accuracy for sample " + str(sample + 1) + " : " + acc)
+        print("Final accuracy for sample " + str(sample + 1) + " : " + str(acc))
     print()
 
     print("Final accuracies:")
     for sample in range(5):
-    
-        print("Sample " + str(sample + 1) + " accuracy: " + sample_accuracy[sample])
+        print("Sample " + str(sample + 1) + " accuracy: " + str(sample_accuracy[sample]))
+    print("Average accuracy: " + str(sum(sample_accuracy)/len(sample_accuracy)))
 
 if __name__ == '__main__':
     main()

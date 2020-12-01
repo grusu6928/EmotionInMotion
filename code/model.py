@@ -18,7 +18,7 @@ class Model(tf.keras.Model):
         self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(self.learning_rate)
         self.batch_size = 60
-        self.num_epochs = 200
+        self.num_epochs = 5000 #working best at 200
         # num channels,kernel size, stride size
         self.layer1 = tf.keras.layers.Conv1D(5, 11, strides = 4, activation = "relu", input_shape = (259,1))
         self.layer2 = tf.keras.layers.Conv1D(10, 5, strides = 1, activation = "relu")
