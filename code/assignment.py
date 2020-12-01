@@ -65,7 +65,7 @@ def reshape_spectrogram(spec_train, spec_test):
 def train(model, spec_train, label_train, shuffle=False, noprint=False):
     if(shuffle):
         indices = range(spec_train.shape[0])
-        indices = tf.random.shuffle(indices)
+        tf.random.shuffle(indices)
         spec_train = tf.gather(spec_train, indices)
         label_train = tf.gather(label_train, indices)
     loss_list = []

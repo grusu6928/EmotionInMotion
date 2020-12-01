@@ -18,12 +18,12 @@ class Model(tf.keras.Model):
         self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(self.learning_rate)
         self.batch_size = 60
-        self.num_epochs = 2000
+        self.num_epochs = 200
         # num channels,kernel size, stride size
-        self.layer1 = tf.keras.layers.Conv1D(20, 11, strides = 4, activation = "relu", input_shape = (259,1))
-        self.layer2 = tf.keras.layers.Conv1D(40, 5, strides = 1, activation = "relu")
-        self.layer3 = tf.keras.layers.Conv1D(80, 3, strides = 1, activation = "relu")
-        self.layer4 = tf.keras.layers.Conv1D(160, 3, strides = 1, activation = "relu")
+        self.layer1 = tf.keras.layers.Conv1D(5, 11, strides = 4, activation = "relu", input_shape = (259,1))
+        self.layer2 = tf.keras.layers.Conv1D(10, 5, strides = 1, activation = "relu")
+        self.layer3 = tf.keras.layers.Conv1D(20, 3, strides = 1, activation = "relu")
+        self.layer4 = tf.keras.layers.Conv1D(30, 3, strides = 1, activation = "relu")
         #self.layer5 = tf.keras.layers.Conv1D(256, 3, strides = 1, activation = "relu") #!!!!!!!!!!
         #“Maxpool-[kernelsize]-[stride size]”
         self.max1 = tf.keras.layers.MaxPool1D(pool_size = 3, strides = 2)
