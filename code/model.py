@@ -17,8 +17,8 @@ class Model(tf.keras.Model):
         tf.keras.backend.set_floatx('float64')
         self.learning_rate = 0.01
         self.optimizer = tf.keras.optimizers.Adam(self.learning_rate)
-        self.batch_size = 102
-        self.num_epochs = 1
+        self.batch_size = 10
+        self.num_epochs = 5
         # num channels,kernel size, stride size
         self.layer1 = tf.keras.layers.Conv1D(96, 11, strides = 4, activation = "relu", input_shape = (259,1))
         self.layer2 = tf.keras.layers.Conv1D(256, 5, strides = 1, activation = "relu")
@@ -31,7 +31,7 @@ class Model(tf.keras.Model):
         self.max3 = tf.keras.layers.MaxPool1D(pool_size = 3, strides = 2)
 
         #attention stuff
-        #self.u = tf.Variable(tf.random.truncated_normal((self.batch_size, 4, 1)))
+        self.u = tf.Variable(tf.random.truncated_normal((self.batch_size, 4, 1)))
         self.linear_layer = tf.keras.layers.Dense((4), activation="tanh", dtype='float32') #might be different f and t
         #self.test_layer = tf.keras.layers.Dense((4), activation="tanh", dtype='float32')
         self.lammda = 0.3
@@ -100,10 +100,10 @@ class Model(tf.keras.Model):
         #print("fcn output shape:")
         #print(fcn_output.shape)
         #print("fcn finished!")
-        #attention_output = self.attention_layer(fcn_output)
+        attention_output = self.attention_layer(fcn_output)
         #self.test_layer(tf.flatten(fcn_output))
         #softmax
-        return tf.nn.softmax(fcn_output)
+        return tf.nn.softmax(attention_output)
 
     def loss(self, predictions, labels):
         #print("predictions shape, labels shape")
@@ -115,3 +115,4 @@ class Model(tf.keras.Model):
     def accuracy(self, predictions, labels):
         correct_predictions = tf.equal(tf.argmax(predictions, 1), tf.argmax(labels, 1))
         return tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
+        #return tf.reduce_mean(tf.argmax(predictions, axis=0) == labels)

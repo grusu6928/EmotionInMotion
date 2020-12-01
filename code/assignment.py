@@ -54,7 +54,7 @@ def train(model, spec_train, label_train):
             with tf.GradientTape() as tape:
                 predictions = model.call(spec)
                 loss = model.loss(predictions, label)
-                print(loss)
+                #print(loss)
             gradients = tape.gradient(loss, model.trainable_variables)
             model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
             train_acc = model.accuracy(predictions, label)
