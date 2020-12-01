@@ -13,7 +13,7 @@ from keras.utils import to_categorical
 
 from model import Model
 
-sample = 1
+sample = 5
 
 def load_data():
     train = pd.read_csv("../data/train_sample"+str(sample)+".csv")
@@ -42,36 +42,33 @@ def reshape_spectrogram(spec_train, spec_test):
     return spec_train,spec_test
 
 def train(model, spec_train, label_train):
-    #indices = range(train_inputs.shape[0]) 
-    #tf.random.shuffle(indices) 
-    #train_inputs = tf.gather(train_inputs, indices) 
-    #train_labels = tf.gather(train_labels, indices)     #batching 
-    #print("spec:")
-    #print(spec_train)
+    #indices = range(spec_train.shape[0])
+    #indices = tf.random.shuffle(indices)
+    #spec_train = tf.gather(spec_train, indices)
+    #label_train = tf.gather(label_train, indices)
     for i in range(0,len(spec_train),model.batch_size):
-        spec=spec_train[i:i+model.batch_size]
-        label = label_train[i:i+model.batch_size]
-        # Implement backprop: 
-        with tf.GradientTape() as tape:
-            predictions = model.call(spec)
-            #print("predictions:")
-            #print(predictions)
-            #print("labels:")
-            #print(label)
-            loss = model.loss(predictions, label)
-        gradients = tape.gradient(loss, model.trainable_variables)
-        model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
-        train_acc = model.accuracy(predictions, label)
-        print("Accuracy on training set after {} training steps: {}".format(i, train_acc))
+        if model.batch_size + i <= len(spec_train):
+            spec=spec_train[i:i+model.batch_size]
+            label = label_train[i:i+model.batch_size]
+            # Implement backprop: 
+            with tf.GradientTape() as tape:
+                predictions = model.call(spec)
+                loss = model.loss(predictions, label)
+                print(loss)
+            gradients = tape.gradient(loss, model.trainable_variables)
+            model.optimizer.apply_gradients(zip(gradients, model.trainable_variables))
+            train_acc = model.accuracy(predictions, label)
+            print("Accuracy on training set after {} training steps: {}".format(i, train_acc))
 
 def test(model, spec_test, label_test):
     test_accuracy = []
     for i in range(0,len(spec_test),model.batch_size):
-        spec=spec_test[i:i+model.batch_size]
-        label = label_test[i:i+model.batch_size]
-        # Implement backprop: 
-        predictions = model.call(spec) # this calls the call function conveniently 
-        test_accuracy.append(model.accuracy(predictions, label))
+        if model.batch_size + i <= len(spec_test):
+            spec = spec_test[i:i+model.batch_size]
+            label = label_test[i:i+model.batch_size]
+            # Implement backprop: 
+            predictions = model.call(spec) # this calls the call function conveniently 
+            test_accuracy.append(model.accuracy(predictions, label))
     return(np.mean(test_accuracy))
 
 def main():
@@ -85,11 +82,15 @@ def main():
     print("Finished preprocessing!")
     f = spec_train.shape[0] #frequency
     t = spec_train.shape[1] #time
-    model = Model(f, t) #what are f and t
+    model = Model()
     print("Starting training...")
-    train(model, spec_train, label_train)
+    for _i_ in range(model.num_epochs):
+        print()
+        print("Epoch " + str(_i_ + 1) + ":")
+        print()
+        train(model, spec_train, label_train)
     print("Finished training!")
-    print("accuracy: " + str(test(model, spec_test, label_test)))
+    print("Final accuracy: " + str(test(model, spec_test, label_test)))
 
 
 if __name__ == '__main__':
