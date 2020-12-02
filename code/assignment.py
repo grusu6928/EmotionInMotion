@@ -88,13 +88,21 @@ def train(model, spec_train, label_train, shuffle=False, noprint=False):
 
 def test(model, spec_test, label_test):
     test_accuracy = []
+    #used for weighted accuracy
+    num_correct = np.zeros(4)
+    total = np.zeros(4)
     for i in range(0,len(spec_test),model.batch_size):
         if model.batch_size + i <= len(spec_test):
             spec = spec_test[i:i+model.batch_size]
             label = label_test[i:i+model.batch_size]
-            predictions = model.call(spec) # this calls the call function conveniently 
+            predictions = model.call(spec)
             test_accuracy.append(model.accuracy(predictions, label))
-    return(np.mean(test_accuracy))
+            temp_correct, temp_total = model.accuracy_weighted(predictions, label)
+            num_correct = num_correct + temp_correct
+            total = total + temp_total
+    print(num_correct)
+    print(total)
+    return(np.mean(test_accuracy), np.nanmean(num_correct/total))
 
 def main():
     if "VISUALIZE" in sys.argv:
@@ -125,6 +133,7 @@ def main():
     print("Reshaped spectogram")
     print("Finished preprocessing!")
     sample_accuracy = []
+    sample_accuracy_weighted = []
     #run each sample
     for sample in range(5):
         print("Sample #", sample)
@@ -142,15 +151,25 @@ def main():
             visualize_loss(loss_list)
             print()
         print("Finished traning!")
-        acc = test(model, spec_test[sample], label_test[sample])
+        acc, weight_acc = test(model, spec_test[sample], label_test[sample])
         sample_accuracy.append(acc)
-        print("Final accuracy for sample " + str(sample + 1) + " : " + str(acc))
+        sample_accuracy_weighted.append(weight_acc)
+        print("Final unweighted accuracy for sample " + str(sample + 1) + " : " + str(acc))
+        print("Final weighted accuracy for sample " + str(sample + 1) + " : " + str(weight_acc))
+        print()
     print()
 
-    print("Final accuracies:")
+    print("Final unweighted accuracies:")
     for sample in range(5):
-        print("Sample " + str(sample + 1) + " accuracy: " + str(sample_accuracy[sample]))
-    print("Average accuracy: " + str(sum(sample_accuracy)/len(sample_accuracy)))
+        print("Sample " + str(sample + 1) + " unweighted accuracy: " + str(sample_accuracy[sample]))
+    print("Average unweighted accuracy: " + str(sum(sample_accuracy)/len(sample_accuracy)))
+    print()
+    print("Final weighted accuracies:")
+    for sample in range(5):
+        print("Sample " + str(sample + 1) + " weighted accuracy: " + str(sample_accuracy_weighted[sample]))
+    print("Average weighted accuracy: " + str(sum(sample_accuracy_weighted)/len(sample_accuracy_weighted)))
+
+
 
 if __name__ == '__main__':
     main()

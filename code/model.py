@@ -17,8 +17,9 @@ class Model(tf.keras.Model):
         tf.keras.backend.set_floatx('float64')
         self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(self.learning_rate)
-        self.batch_size = 60
-        self.num_epochs = 400 #working best at 200
+        self.batch_size = 51
+        self.num_epochs = 1
+
         # num channels,kernel size, stride size
         self.layer1 = tf.keras.layers.Conv1D(5, 11, strides = 4, activation = "relu", input_shape = (259,1))
         self.layer2 = tf.keras.layers.Conv1D(10, 5, strides = 1, activation = "relu")
@@ -115,4 +116,14 @@ class Model(tf.keras.Model):
     def accuracy(self, predictions, labels):
         correct_predictions = tf.equal(tf.argmax(predictions, 1), tf.argmax(labels, 1))
         return tf.reduce_mean(tf.cast(correct_predictions, tf.float32))
-        #return tf.reduce_mean(tf.argmax(predictions, axis=0) == labels)
+
+    def accuracy_weighted(self, predictions, labels):
+        num_correct = np.zeros(4)
+        total = np.zeros(4)
+        predictions = tf.argmax(predictions,1)
+        labels = tf.argmax(labels,1)
+        for i in range(len(predictions)):
+            if predictions[i] == labels[i]:
+                num_correct[predictions[i]] += 1
+            total[predictions[i]] += 1
+        return num_correct, total
