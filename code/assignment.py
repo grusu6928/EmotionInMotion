@@ -136,7 +136,7 @@ def main():
     sample_accuracy_weighted = []
     #run each sample
     for sample in range(5):
-        print("Sample #", sample)
+        print("Sample #", sample + 1)
         model = Model()
         print("Starting training...")
         loss_list = []

@@ -18,7 +18,7 @@ class Model(tf.keras.Model):
         self.learning_rate = 0.001
         self.optimizer = tf.keras.optimizers.Adam(self.learning_rate)
         self.batch_size = 51
-        self.num_epochs = 1
+        self.num_epochs = 200
 
         # num channels,kernel size, stride size
         self.layer1 = tf.keras.layers.Conv1D(5, 11, strides = 4, activation = "relu", input_shape = (259,1))
@@ -124,6 +124,6 @@ class Model(tf.keras.Model):
         labels = tf.argmax(labels,1)
         for i in range(len(predictions)):
             if predictions[i] == labels[i]:
-                num_correct[predictions[i]] += 1
-            total[predictions[i]] += 1
+                num_correct[labels[i]] += 1
+            total[labels[i]] += 1
         return num_correct, total
