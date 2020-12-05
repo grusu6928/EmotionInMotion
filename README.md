@@ -17,7 +17,7 @@ The problem we are addressing is the difficulty of classifying human emotion, gi
 [RAVDESS](https://smartlaboratory.org/ravdess/) (Ryerson Audio-Visual Database of Emotional Speech and Song)
 
 #### Program Structure
-The **`code`** directory is where the program resides 
+The **`code`** directory is where the program resides. 
 The **`data`** directory is created and populated with the preprocessed data after running `preprocess.py` and `train_test.py`
 
 `model.py` - contains the FCN and attention layer, as well as the call function which does the forward and backward passes 
