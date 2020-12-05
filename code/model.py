@@ -43,30 +43,12 @@ class Model(tf.keras.Model):
         # the frequency and time domains of spectrogram and C is
         # channel size
         # lrn should take in 4d tensor as first input, but our conv2d uses 3d tensors, consider expand_dims or something else
-        #TODO: lrn is commented out of now
-        #print("speech_spectrogram shape")
-        #print(speech_spectrogram.shape)
         layer1out = self.layer1(speech_spectrogram)
-        #print("layer one output shape:")
-        #print(layer1out.shape)
         layer1out = self.max1(layer1out)
-        #print("max one output shape:")
-        #print(layer1out.shape)
         layer2out = self.layer2(layer1out)
-        #print("layer two output shape:")
-        #print(layer2out.shape)
         layer2out = self.max2(layer2out)
-        #print("max two output shape:")
-        #print(layer2out.shape)
         layer3out = self.layer3(layer2out)
-        #print("layer three output shape:")
-        #print(layer3out.shape)
         layer4out = self.layer4(layer3out)
-        #print("layer four output shape:")
-        #print(layer4out.shape)
-        #layer5out = self.layer5(layer4out)
-        #print("layer five output shape:")
-        #print(layer5out.shape)
         FCN_out = self.max3(layer4out)
         flattened_fcn_output = tf.keras.layers.Flatten()(FCN_out)
 
